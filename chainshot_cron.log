@@ -1,0 +1,128 @@
+  File "/Users/brockhenley/chainshot/chainshot.py", line 99
+    return "TEST: ChainShot FULL AUTO CYCLE — CRON → TELEGRAM → TRADE → 
+           ^
+SyntaxError: unterminated string literal (detected at line 99)
+[DEBUG] Sending to Telegram...
+[DEBUG] Response: 200
+[ALPACA] Connected — $100,000.00 cash
+[DEBUG] Sending to Telegram...
+[DEBUG] Response: 200
+[TRADE] EXECUTED SHORT HRL 10 | LONG COST 5
+[DEBUG] Sending to Telegram...
+[DEBUG] Response: 200
+[ALPACA] Connected — $100,000.00 cash
+[DEBUG] Sending to Telegram...
+[DEBUG] Response: 200
+[TRADE] EXECUTED SHORT HRL 10 | LONG COST 5
+[DEBUG] Sending to Telegram...
+[DEBUG] Response: 200
+[ALPACA] Connected — $100,000.00 cash
+[DEBUG] Sending to Telegram...
+[DEBUG] Response: 200
+[TRADE] EXECUTED SHORT HRL 10 | LONG COST 5
+[DEBUG] Sending to Telegram...
+[DEBUG] Response: 200
+[ALPACA] Connected — $100,000.00 cash
+[DEBUG] Sending to Telegram...
+[DEBUG] Response: 200
+[TRADE] EXECUTED SHORT HRL 10 | LONG COST 5
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
+  File "/Users/brockhenley/chainshot/chainshot.py", line 3
+    from datetime import datetime, timezone import time
+                                            ^^^^^^
+SyntaxError: invalid syntax
