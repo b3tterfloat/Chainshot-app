@@ -4,15 +4,15 @@ import alpaca_trade_api as tradeapi
 from datetime import timezone
 
 # === CONFIG ===
-ALPACA_KEY = "PKKA3JM6FPA7E73WWCHUX7PZDQ"
-ALPACA_SECRET = "9Frpe4ECnhsN4DNh6SSvENxJKxJ5FqebwKfu4xxyDVXR"
-ALPACA_BASE_URL = "https://paper-api.alpaca.markets"  # PAPER MODE
-TELEGRAM_TOKEN = "7959803191:AAElC4k6-Evxm9DMcBLxmtruptyoUpCmXM4"
-CHAT_ID = "5130903867"
+ALPACA_KEY = "YOUR_ALPACA_KEY"
+ALPACA_SECRET = "YOUR_ALPACA_SECRET"
+ALPACA_BASE_URL = "https://paper-api.alpaca.markets"
+TELEGRAM_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
+CHAT_ID = "YOUR_CHAT_ID"
 
 # === LOGGING ===
 def log(msg):
-    with open("/Users/brockhenley/chainshot/trade_log.txt", "a") as f:
+    with open("trade_log.txt", "a") as f:
         f.write(f"[{datetime.datetime.now()}] {msg}\n")
     print(msg)
 
@@ -21,7 +21,7 @@ def send_alert(title, msg):
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     payload = {"chat_id": CHAT_ID, "text": f"*{title}*\n{msg}", "parse_mode": "Markdown"}
     try:
-        requests.post(url, data=payload)
+        requests.post(url, data=payload, timeout=10)
     except: pass
 
 # === MARKET HOURS (ET) ===
@@ -33,7 +33,7 @@ def is_market_open():
     if et.hour == 9 and et.minute < 30: return False
     return True
 
-# === SIGNALS ===
+# === HIGH-CONVICTION SIGNALS ONLY ===
 def air_force_alert():
     url = 'https://opensky-network.org/api/states/all?lamin=27.5&lamax=28.5&lonmin=-83.0&lonmax=-82.0'
     try:
@@ -46,20 +46,20 @@ def air_force_alert():
 
 def oil_draw_alert():
     try:
-        data = requests.get("https://ir.eia.gov/wpsr/table1.json", timeout=10).json()
-        draw = data['series'][0]['data'][0][1] - data['series'][0]['data'][1][1]
+        eia_url = "https://ir.eia.gov/wpsr/table1.json"
+        data = requests.get(eia_url, timeout=10).json()
+        current = data['series'][0]['data'][0][1]
+        previous = data['series'][0]['data'][1][1]
+        draw = previous - current
         if draw > 3_000_000:
             return f"OIL DRAWDOWN {draw/1e6:.1f}M bbl → LONG USO"
     except: pass
     return None
 
-def shipping_alert():
-    return "TEST: ChainShot v5.5 — AUTO PAPER TRADE"
-
 # === AUTO TRADE ===
 def auto_trade(signal):
     if not is_market_open():
-        log("MARKET CLOSED — NO TRADES")
+        log("MARKET CLOSED — NO ACTION")
         return
 
     try:
@@ -83,30 +83,22 @@ def auto_trade(signal):
             send_alert("TRADE EXECUTED", msg)
             log(msg)
 
-        if 'TEST' in signal:
-            qty = 1
-            api.submit_order('LMT', qty, 'buy', 'market', 'day')
-            msg = f"PAPER TEST: LONG LMT {qty}"
-            send_alert("TEST TRADE", msg)
-            log(msg)
-
     except Exception as e:
-        log(f"ALPACA ERROR: {e}")
+        log(f"ERROR: {e}")
 
-# === MAIN LOOP ===
+# === MAIN ===
 def main():
     log("=== ChainShot v5.5 STARTED ===")
     signal = None
     signal = signal or air_force_alert()
     signal = signal or oil_draw_alert()
-    signal = signal or shipping_alert()
 
     if signal:
         log(f"SIGNAL: {signal}")
         send_alert("SIGNAL DETECTED", signal)
         auto_trade(signal)
     else:
-        log("NO SIGNAL")
+        log("NO SIGNAL — WAITING")
 
 if __name__ == "__main__":
     main()
