@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: chainshot
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python trader.py
+    envVars:
+      APCA_API_KEY_ID: YOUR_REAL_KEY
+      APCA_API_SECRET_KEY: YOUR_REAL_SECRET
+      TELEGRAM_TOKEN: YOUR_REAL_TOKEN
+      TELEGRAM_CHAT_ID: -5130903867
