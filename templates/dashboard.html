@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ChainShot v7.3</title>
+  <meta http-equiv="refresh" content="10">
+  <style>
+    body { font-family: monospace; background: #000; color: #0f0; padding: 20px; }
+    .log { background: #111; padding: 15px; height: 600px; overflow-y: scroll; border: 1px solid #0f0; }
+    .equity { font-size: 2em; color: #0f0; margin: 20px 0; }
+    h1 { color: #0f0; }
+  </style>
+</head>
+<body>
+  <h1>ChainShot v7.3 — LIVE</h1>
+  <div class="equity">Equity: {{ equity }}</div>
+  <pre class="log">{{ log }}</pre>
+  <p>Auto-refresh every 10s | {{ now }}</p>
+</body>
+</html>

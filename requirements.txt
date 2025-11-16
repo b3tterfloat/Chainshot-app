@@ -1,3 +1,11 @@
+alpaca-trade-api==3.2.0
+python-telegram-bot==20.7
+python-dotenv
 requests
-alpaca-trade-api
+numpy
+yfinance
+scikit-learn
+joblib
+pandas
+websockets<11
 flask
