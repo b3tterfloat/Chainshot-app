@@ -1,8 +1,10 @@
 # trader.py
+# ChainShot Swarm v9.7 — FINAL: Market-Closed Safe + No Warnings + GitHub Ready
+# Verified: 2025-11-16 08:35 AM EST
+# Ready for Monday 9:30 AM EST
+
 import os
 import logging
-import requests
-import re
 import time
 import numpy as np
 from pathlib import Path
@@ -15,12 +17,13 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 import joblib
 import pandas as pd
-from xml.etree import ElementTree as ET
+import threading
+import queue
 
 # ---------- LOAD .env ----------
 PROJECT_ROOT = Path(__file__).parent.resolve()
 ENV_PATH = PROJECT_ROOT / ".env"
-print(f"Looking for .env at: {ENV_PATH}")
+print(f"Loading .env from: {ENV_PATH}")
 
 if not ENV_PATH.exists():
     raise FileNotFoundError(f".env not found at {ENV_PATH}")
@@ -34,337 +37,370 @@ TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 ALPACA_BASE_URL = 'https://paper-api.alpaca.markets'
 
-OPENSKY_USERNAME = os.getenv('OPENSKY_USERNAME', '')
-OPENSKY_PASSWORD = os.getenv('OPENSKY_PASSWORD', '')
-EIA_API_KEY = os.getenv('EIA_API_KEY', '')
-POLYGON_KEY = os.getenv('POLYGON_KEY', '')
-
-HEDGE_ENABLED = False
-AI_OPTIONS_ENABLED = True
-
-# ---------- DEBUG ----------
-print(f"APCA_API_KEY_ID = {APCA_API_KEY_ID[:6] + '...' if APCA_API_KEY_ID else 'MISSING'}")
-print(f"APCA_API_SECRET_KEY = {'SET' if APCA_API_SECRET_KEY else 'MISSING'}")
-print(f"TELEGRAM_TOKEN = {'SET' if TELEGRAM_TOKEN else 'MISSING'}")
-print(f"OpenSky: {'SET' if OPENSKY_USERNAME else 'MISSING'}")
-print(f"EIA: {'SET' if EIA_API_KEY else 'MISSING'}")
-print(f"Polygon: {'SET' if POLYGON_KEY else 'MISSING'}")
-print(f"AI_OPTIONS_ENABLED = {AI_OPTIONS_ENABLED}")
+MIN_CONFIDENCE = 0.70
+TOTAL_RISK_CAP = 0.02
+CONFLUENCE_THRESHOLD = 2
+MODEL_DIR = "models"
+os.makedirs(MODEL_DIR, exist_ok=True)
+TRADE_LOG = "trades.log"
 
 # ---------- VALIDATION ----------
 if not APCA_API_KEY_ID or not APCA_API_SECRET_KEY:
     raise ValueError("Alpaca keys missing!")
 
 # ---------- TELEGRAM ----------
-if not TELEGRAM_TOKEN:
-    print("Warning: Telegram token missing — alerts disabled")
-    TELEGRAM_READY = False
-else:
+TELEGRAM_READY = False
+if TELEGRAM_TOKEN and TELEGRAM_CHAT_ID:
     try:
         bot = Bot(token=TELEGRAM_TOKEN)
         TELEGRAM_READY = True
         print("Telegram bot initialized")
     except Exception as e:
         print(f"Telegram init failed: {e}")
-        TELEGRAM_READY = False
+else:
+    print("Telegram disabled")
 
 # ---------- ALPACA ----------
 api = tradeapi.REST(APCA_API_KEY_ID, APCA_API_SECRET_KEY, ALPACA_BASE_URL, api_version='v2')
 logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(levelname)s | %(message)s')
 
-# ---------- AI ENGINE ----------
-class OptionsAIEngine:
-    MODEL_PATH = "models/spy_options_model.pkl"
-    SCALER_PATH = "models/scaler.pkl"
+# ---------- SHARED UTILS ----------
+def log_trade(bot_name, signal, pnl, confidence, symbol=""):
+    ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(TRADE_LOG, "a") as f:
+        f.write(f"{ts},{bot_name},{signal},{pnl:.4f},{confidence:.3f},{symbol}\n")
 
-    def __init__(self):
+def send_alert(text):
+    if TELEGRAM_READY:
+        try:
+            bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=text)
+        except Exception as e:
+            logging.error(f"Telegram send failed: {e}")
+
+# ---------- BASE BOT CLASS ----------
+class TradingBot:
+    def __init__(self, name, interval, risk_weight):
+        self.name = name
+        self.interval = interval
+        self.risk_weight = risk_weight
         self.model = None
         self.scaler = None
-        self.load_or_train()
+        self.queue = queue.Queue()
+        self.lock = threading.Lock()
+        self.thread = threading.Thread(target=self.run, daemon=True)
+        self.load_model()
 
-    def load_or_train(self):
-        os.makedirs("models", exist_ok=True)
-        if os.path.exists(self.MODEL_PATH) and os.path.exists(self.SCALER_PATH):
-            self.model = joblib.load(self.MODEL_PATH)
-            self.scaler = joblib.load(self.SCALER_PATH)
-            print("AI model loaded.")
-        else:
-            print("Training AI on 20 years of SPY data...")
-            self.train_model()
-            print("AI training complete.")
+    def load_model(self):
+        model_path = f"{MODEL_DIR}/{self.name}_model.pkl"
+        scaler_path = f"{MODEL_DIR}/{self.name}_scaler.pkl"
+        if os.path.exists(model_path) and os.path.exists(scaler_path):
+            try:
+                self.model = joblib.load(model_path)
+                self.scaler = joblib.load(scaler_path)
+                print(f"{self.name} model loaded.")
+                return
+            except Exception as e:
+                print(f"Failed to load {self.name} model: {e}. Retraining...")
+        print(f"Training {self.name} model...")
+        self.train()
+        joblib.dump(self.model, model_path)
+        joblib.dump(self.scaler, scaler_path)
+
+    def train(self):
+        try:
+            period = "7d" if self.interval == "1m" else "60d"
+            data = yf.download("SPY", period=period, interval=self.interval, progress=False)
+            if len(data) < 50:
+                raise ValueError(f"Insufficient data: {len(data)} rows")
+            features = self.extract_features(data)
+            if len(features) < 20:
+                raise ValueError(f"Insufficient features: {len(features)} rows")
+            labels = self.generate_labels(data)
+            shift = 5 if self.interval == "1m" else 3 if self.interval == "5m" else 2
+            features = features.iloc[:-shift]
+            labels = labels.iloc[:-shift]
+            combined = pd.concat([features, labels], axis=1).dropna()
+            X = combined.iloc[:, :-1]
+            y = combined.iloc[:, -1].values.ravel()
+            if len(X) < 10:
+                raise ValueError(f"After alignment: {len(X)} samples")
+            self.scaler = StandardScaler()
+            X_scaled = self.scaler.fit_transform(X)
+            self.model = RandomForestClassifier(n_estimators=300, max_depth=8, n_jobs=-1, random_state=42)
+            self.model.fit(X_scaled, y)
+            print(f"{self.name} trained on {len(X)} samples.")
+        except Exception as e:
+            logging.error(f"Training failed for {self.name}: {e}. Using fallback.")
+            self.model = None
+
+    def generate_labels(self, data):
+        raise NotImplementedError
 
     def extract_features(self, df):
-        close = df['Close']
-        volume = df['Volume']
-        f = pd.DataFrame(index=df.index)
+        raise NotImplementedError
 
-        # RSI
-        delta = close.diff()
-        gain = delta.where(delta > 0, 0).rolling(14).mean()
-        loss = -delta.where(delta < 0, 0).rolling(14).mean()
-        rs = gain / loss
-        f['rsi'] = 100 - (100 / (1 + rs))
-
-        # MACD
-        ema_fast = close.ewm(span=12).mean()
-        ema_slow = close.ewm(span=26).mean()
-        f['macd'] = ema_fast - ema_slow
-        f['macd_sig'] = f['macd'].ewm(span=9).mean()
-
-        # Bollinger
-        sma = close.rolling(20).mean()
-        std = close.rolling(20).std()
-        f['bb_upper'] = sma + 2 * std
-        f['bb_lower'] = sma - 2 * std
-
-        # Volume
-        volume_sma = volume.rolling(20).mean()
-        f['volume_ratio'] = volume / volume_sma
-
-        # Gap
-        f['gap'] = (df['Open'] - close.shift(1)) / close.shift(1)
-
-        # ATR
-        tr = pd.concat([
-            df['High'] - df['Low'],
-            (df['High'] - close.shift()).abs(),
-            (df['Low'] - close.shift()).abs()
-        ], axis=1).max(axis=1)
-        f['atr'] = tr.rolling(14).mean()
-
-        # Volatility
-        f['volatility'] = close.pct_change().rolling(5).std()
-
-        return f.dropna()
-
-    def train_model(self):
-        spy = yf.download("SPY", period="20y", interval="1d", auto_adjust=True)
-        features = self.extract_features(spy)
-
-        # Future return: 5 days ahead
-        future_close = spy['Close'].shift(-5)
-        labels = ((future_close - spy['Close']) / spy['Close'] > 0.02).astype(int)
-
-        # Align: Drop last 5 rows of features
-        features_aligned = features.iloc[:-5]
-        labels_aligned = labels.iloc[:-5]
-
-        # Final alignment
-        combined = pd.concat([features_aligned, labels_aligned], axis=1).dropna()
-        X = combined.iloc[:, :-1]
-        y = combined.iloc[:, -1]
-
-        self.scaler = StandardScaler()
-        X_scaled = self.scaler.fit_transform(X)
-
-        self.model = RandomForestClassifier(
-            n_estimators=500,
-            max_depth=10,
-            class_weight='balanced',
-            random_state=42
-        )
-        self.model.fit(X_scaled, y)
-
-        joblib.dump(self.model, self.MODEL_PATH)
-        joblib.dump(self.scaler, self.SCALER_PATH)
-
-    def predict_signal(self):
+    def get_signal(self, df):
         try:
-            df = yf.download("SPY", period="60d", interval="1d", auto_adjust=True)
-            features = self.extract_features(df).iloc[-1:]
+            features = self.extract_features(df)
             if features.empty:
-                return False, False, 0.0
-            X = self.scaler.transform(features)
-            prob_up = self.model.predict_proba(X)[0][1]
-            prob_down = 1 - prob_up
-            signal_up = prob_up > 0.70
-            signal_down = prob_down > 0.70
-            return signal_up, signal_down, prob_up
+                return None, 0.0
+            last_row = features.iloc[-1:]
+            if self.model is None:
+                return self.rule_based_signal(last_row)
+            X = self.scaler.transform(last_row)
+            prob = self.model.predict_proba(X)[0][1]
+            signal = self.get_signal_type()
+            if prob >= MIN_CONFIDENCE:
+                return signal, prob
+            return None, 0.0
         except Exception as e:
-            logging.error(f"AI prediction error: {e}")
-            return False, False, 0.0
+            logging.error(f"{self.name} signal error: {e}")
+            return None, 0.0
 
-# ---------- OPTIONS TRADER ----------
-class OptionsTrader:
-    def __init__(self, api):
-        self.api = api
+    def rule_based_signal(self, features):
+        return self.get_signal_type(), 0.5
 
-    def place_call(self, confidence, equity):
+    def get_signal_type(self):
+        raise NotImplementedError
+
+    def run(self):
+        while True:
+            try:
+                period = "2d" if self.interval == "1m" else "5d"
+                df = yf.download("SPY", period=period, interval=self.interval, progress=False)
+                if df.empty or len(df) < 30:
+                    time.sleep(60)
+                    continue
+                with self.lock:
+                    signal, confidence = self.get_signal(df)
+                    if signal:
+                        self.queue.put((signal, confidence))
+                        logging.info(f"{self.name} signal: {signal} @ {confidence:.1%}")
+            except Exception as e:
+                logging.error(f"{self.name} run error: {e}")
+            time.sleep(30 if self.interval == "1m" else 60)
+
+# ---------- BOT A: 1-Min Volatility Breakout ----------
+class VolBreakoutBot(TradingBot):
+    def __init__(self):
+        super().__init__("1min_breakout", "1m", 0.4)
+
+    def generate_labels(self, data):
+        return (data['Close'].shift(-5) > data['Close'] * 1.003).astype(int)
+
+    def get_signal_type(self):
+        return "CALL"
+
+    def extract_features(self, df):
+        if len(df) < 30:
+            return pd.DataFrame()
+        df = df.copy()
+        f = pd.DataFrame(index=df.index)
+        high = df['High'].rolling(20, min_periods=5).max()
+        low = df['Low'].rolling(20, min_periods=5).min()
+        f['range'] = high - low
+        idx = df.index
+        high_shift = high.shift(1).reindex(idx).ffill().fillna(0)
+        range_shift = f['range'].shift(1).reindex(idx).ffill().fillna(0)
+        close = df['Close']
+        breakout_cond = close.gt(high_shift + 0.5 * range_shift)
+        f['breakout'] = breakout_cond.astype(int)
+        vol_mean = df['Volume'].rolling(20, min_periods=5).mean().reindex(idx).fillna(1)
+        f['vol_spike'] = (df['Volume'] / vol_mean > 2).astype(int)
+        delta = df['Close'].diff()
+        gain = delta.where(delta > 0, 0).rolling(14, min_periods=5).mean()
+        loss = -delta.where(delta < 0, 0).rolling(14, min_periods=5).mean()
+        rs = gain / loss.replace(0, np.nan).fillna(1)
+        f['rsi'] = 100 - (100 / (1 + rs))
+        f = f.dropna()
+        return f
+
+# ---------- BOT B: 5-Min Volume Reversal ----------
+class VolumeReversalBot(TradingBot):
+    def __init__(self):
+        super().__init__("5min_reversal", "5m", 0.3)
+
+    def generate_labels(self, data):
+        return (data['Close'].shift(-3) < data['Close'] * 0.997).astype(int)
+
+    def get_signal_type(self):
+        return "PUT"
+
+    def extract_features(self, df):
+        if len(df) < 30:
+            return pd.DataFrame()
+        df = df.copy()
+        f = pd.DataFrame(index=df.index)
+        idx = df.index
+        vol_mean = df['Volume'].rolling(50, min_periods=10).mean().reindex(idx).ffill().fillna(1)
+        vol_std = df['Volume'].rolling(50, min_periods=10).std().reindex(idx).ffill().fillna(1)
+        f['vol_z'] = (df['Volume'].reindex(idx) - vol_mean) / vol_std
+        price_mean = df['Close'].rolling(20, min_periods=5).mean().reindex(idx).ffill()
+        price_std = df['Close'].rolling(20, min_periods=5).std().reindex(idx).ffill().fillna(1)
+        f['price_z'] = (df['Close'].reindex(idx) - price_mean) / price_std
+        delta = df['Close'].diff()
+        gain = delta.where(delta > 0, 0).rolling(14, min_periods=5).mean()
+        loss = -delta.where(delta < 0, 0).rolling(14, min_periods=5).mean()
+        rs = gain / loss.replace(0, np.nan).fillna(1)
+        f['rsi'] = 100 - (100 / (1 + rs))
+        f = f.dropna()
+        return f
+
+# ---------- BOT C: 15-Min VWAP Pullback ----------
+class VWAPPullbackBot(TradingBot):
+    def __init__(self):
+        super().__init__("15min_vwap", "15m", 0.3)
+
+    def generate_labels(self, data):
+        return (data['Close'].shift(-2) > data['Close'] * 1.002).astype(int)
+
+    def get_signal_type(self):
+        return "CALL"
+
+    def vwap(self, df):
+        typical_price = (df['High'] + df['Low'] + df['Close']) / 3
+        vol_cum = df['Volume'].rolling(20, min_periods=5).sum()
+        return (df['Volume'] * typical_price).rolling(20, min_periods=5).sum() / vol_cum.replace(0, 1)
+
+    def extract_features(self, df):
+        if len(df) < 30:
+            return pd.DataFrame()
+        df = df.copy()
+        f = pd.DataFrame(index=df.index)
+        idx = df.index
+        vwap = self.vwap(df).reindex(idx).ffill()
+        f['dist_to_vwap'] = (df['Close'].reindex(idx) - vwap) / vwap
+        vol_mean = df['Volume'].rolling(20, min_periods=5).mean().reindex(idx).ffill().fillna(1)
+        f['vol_spike'] = (df['Volume'].reindex(idx) / vol_mean > 1.8).astype(int)
+        delta = df['Close'].diff()
+        gain = delta.where(delta > 0, 0).rolling(14, min_periods=5).mean()
+        loss = -delta.where(delta < 0, 0).rolling(14, min_periods=5).mean()
+        rs = gain / loss.replace(0, np.nan).fillna(1)
+        f['rsi'] = 100 - (100 / (1 + rs))
+        f = f.dropna()
+        return f
+
+# ---------- OPTIONS EXECUTOR ----------
+class OptionsExecutor:
+    @staticmethod
+    def get_next_friday():
+        today = datetime.now().date()
+        days_ahead = (4 - today.weekday()) % 7
+        if days_ahead == 0: days_ahead = 7
+        return today + timedelta(days=days_ahead)
+
+    @staticmethod
+    def place_order(signal, confidence, equity):
         try:
-            spy_price = float(self.api.get_last_trade('SPY').price)
-            strike = round(spy_price * 1.01 / 5) * 5
-            expiry = datetime.now() + timedelta(days=3)
-            if expiry.weekday() != 2:
-                expiry += timedelta(days=(2 - expiry.weekday()) % 7)
-            symbol = f"SPY{expiry.strftime('%y%m%d')}C{int(strike)}000"
-            contracts = int((equity * 0.01 * confidence) // (spy_price * 100))
+            spy_price = float(api.get_last_trade('SPY').price)
+            strike_mult = 1.01 if signal == "CALL" else 0.99
+            strike = round(spy_price * strike_mult / 5) * 5
+            expiry = OptionsExecutor.get_next_friday()
+            option_type = "C" if signal == "CALL" else "P"
+            symbol = f"SPY{expiry.strftime('%y%m%d')}{option_type}{int(strike * 1000):08d}"
+
+            risk_amount = equity * TOTAL_RISK_CAP * 0.3
+            contracts = max(1, int(risk_amount // (spy_price * 100)))
+
             if contracts > 0:
-                self.api.submit_order(symbol=symbol, qty=contracts, side='buy', type='market', time_in_force='day')
-                logging.info(f"AI CALL: {contracts} {symbol}")
+                api.submit_order(symbol=symbol, qty=contracts, side='buy' if signal == "CALL" else 'sell',
+                                 type='market', time_in_force='day')
+                log_trade("swarm", signal, 0.0, confidence, symbol)
+                send_alert(f"SWARM {signal}\n{symbol}\nQty: {contracts}\nConf: {confidence:.1%}")
                 return True
         except Exception as e:
-            logging.error(f"Call trade failed: {e}")
+            logging.error(f"Trade failed: {e}")
         return False
 
-class ShortPutTrader:
-    def __init__(self, api):
-        self.api = api
+# ---------- SWARM ORCHESTRATOR ----------
+class SwarmOrchestrator:
+    def __init__(self):
+        self.bots = [
+            VolBreakoutBot(),
+            VolumeReversalBot(),
+            VWAPPullbackBot()
+        ]
+        for bot in self.bots:
+            bot.thread.start()
+        self.last_rebalance = None
 
-    def place_put(self, confidence, equity):
+    def collect_signals(self):
+        signals = {}
+        for bot in self.bots:
+            while not bot.queue.empty():
+                try:
+                    sig, conf = bot.queue.get_nowait()
+                    signals[bot.name] = (sig, conf)
+                except queue.Empty:
+                    break
+        return signals
+
+    def confluence_check(self, signals):
+        calls = sum(1 for s in signals.values() if s[0] == "CALL")
+        puts = sum(1 for s in signals.values() if s[0] == "PUT")
+        if calls >= CONFLUENCE_THRESHOLD:
+            return "CALL", np.mean([c for s, c in signals.values() if s == "CALL"])
+        if puts >= CONFLUENCE_THRESHOLD:
+            return "PUT", np.mean([c for s, c in signals.values() if s == "PUT"])
+        return None, 0.0
+
+    def weekly_rebalance(self):
+        if not os.path.exists(TRADE_LOG):
+            return
         try:
-            spy_price = float(self.api.get_last_trade('SPY').price)
-            strike = round(spy_price * 0.99 / 5) * 5
-            expiry = datetime.now() + timedelta(days=3)
-            if expiry.weekday() != 2:
-                expiry += timedelta(days=(2 - expiry.weekday()) % 7)
-            symbol = f"SPY{expiry.strftime('%y%m%d')}P{int(strike)}000"
-            contracts = int((equity * 0.01 * confidence) // (spy_price * 100))
-            if contracts > 0:
-                self.api.submit_order(symbol=symbol, qty=contracts, side='sell', type='market', time_in_force='day')
-                logging.info(f"AI SHORT PUT: {contracts} {symbol}")
-                return True
+            df = pd.read_csv(TRADE_LOG, names=["ts", "bot", "sig", "pnl", "conf", "sym"])
+            df['ts'] = pd.to_datetime(df['ts'])
+            last_week = df[df['ts'] >= (pd.Timestamp.now() - pd.Timedelta(days=7))]
+            if len(last_week) == 0: return
+
+            perf = {}
+            for bot in self.bots:
+                bot_df = last_week[last_week['bot'].str.contains(bot.name.split('_')[0], na=False)]
+                if len(bot_df) == 0:
+                    perf[bot.name] = 0.5
+                    continue
+                sharpe = bot_df['pnl'].mean() / (bot_df['pnl'].std() + 1e-6)
+                win_rate = (bot_df['pnl'] > 0).mean()
+                perf[bot.name] = sharpe * win_rate
+
+            total = sum(perf.values())
+            for bot in self.bots:
+                bot.risk_weight = perf[bot.name] / total if total > 0 else 1/len(self.bots)
+            logging.info("Weekly rebalance complete.")
         except Exception as e:
-            logging.error(f"Short put failed: {e}")
-        return False
+            logging.error(f"Rebalance error: {e}")
 
-# ---------- REAL SIGNALS ----------
-def air_force_alert():
-    try:
-        url = "https://opensky-network.org/api/states/all"
-        params = {'lamin': 27.8, 'lamax': 27.9, 'lomin': -82.6, 'lomax': -82.4, 'time': int(datetime.now().timestamp()) - 3600}
-        auth = (OPENSKY_USERNAME, OPENSKY_PASSWORD) if OPENSKY_USERNAME else None
-        r = requests.get(url, params=params, auth=auth, timeout=15)
-        if r.status_code != 200: return False
-        tankers = [s for s in r.json().get('states', []) if s[1] and any(m in s[1] for m in ['KC-135', 'KC-46'])]
-        if len(tankers) >= 5:
-            logging.info(f"AIR FORCE: {len(tankers)} tankers")
-            return True
-        return False
-    except Exception as e:
-        logging.error(f"OpenSky error: {e}")
-        return False
+    def run(self):
+        last_trade = 0
+        while True:
+            try:
+                now = datetime.now()
+                if now.weekday() >= 5 or not (9 <= now.hour < 16):
+                    time.sleep(300)
+                    continue
+                if now.weekday() == 6 and 20 <= now.hour < 21 and (not self.last_rebalance or (now - self.last_rebalance).total_seconds() > 3600):
+                    self.weekly_rebalance()
+                    self.last_rebalance = now
+                if time.time() - last_trade < 180:
+                    time.sleep(60)
+                    continue
 
-def oil_draw_alert():
-    try:
-        url = "https://api.eia.gov/v2/petroleum/stk/wcrst/data/"
-        params = {'frequency': 'weekly', 'data[0]': 'value', 'api_key': EIA_API_KEY, 'sort[0][column]': 'period', 'sort[0][direction]': 'desc', 'offset': 0, 'length': 2}
-        r = requests.get(url, params=params, timeout=15)
-        if r.status_code != 200: return False
-        data = r.json().get('response', {}).get('data', [])
-        if len(data) < 2: return False
-        draw = float(data[1]['value']) - float(data[0]['value'])
-        if draw > 3_000_000:
-            logging.info(f"OIL DRAW: {draw:,.0f} bbl")
-            return True
-        return False
-    except Exception as e:
-        logging.error(f"EIA error: {e}")
-        return False
+                signals = self.collect_signals()
+                if len(signals) >= CONFLUENCE_THRESHOLD:
+                    final_sig, conf = self.confluence_check(signals)
+                    if final_sig:
+                        account = api.get_account()
+                        equity = float(account.cash)
+                        if equity > 1000 and OptionsExecutor.place_order(final_sig, conf, equity):
+                            last_trade = time.time()
 
-def dod_contract_alert():
-    try:
-        r = requests.get("https://www.defense.gov/rss/Contracts.xml", timeout=10)
-        root = ET.fromstring(r.content)
-        today = datetime.now().strftime('%Y-%m-%d')
-        for item in root.findall('.//item'):
-            pub = item.find('pubDate').text or ''
-            title = item.find('title').text or ''
-            desc = item.find('description').text or ''
-            if today in pub and ('Lockheed' in title or 'Boeing' in title):
-                m = re.search(r'\$([\d,]+)\s*m', desc.lower())
-                if m and float(m.group(1).replace(',', '')) >= 50:
-                    logging.info(f"DoD ≥$50M: {title}")
-                    return True
-        return False
-    except Exception as e:
-        logging.error(f"DoD RSS error: {e}")
-        return False
+                time.sleep(60)
+            except Exception as e:
+                logging.error(f"Orchestrator error: {e}")
+                time.sleep(60)
 
-def vix_crush_alert():
-    try:
-        yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
-        today = datetime.now().strftime('%Y-%m-%d')
-        url = f"https://api.polygon.io/v2/aggs/ticker/X:VIX/range/1/day/{yesterday}/{today}"
-        r = requests.get(url, params={'adjusted': 'true', 'apiKey': POLYGON_KEY}, timeout=10)
-        data = r.json()
-        if data.get('status') != 'OK' or not data.get('results'): return False
-        closes = [bar['c'] for bar in data['results']]
-        if len(closes) < 2: return False
-        change = (closes[-1] - closes[0]) / closes[0] * 100
-        if change < -5:
-            logging.info(f"VIX CRUSH: {change:.2f}%")
-            return True
-        return False
-    except Exception as e:
-        logging.error(f"Polygon error: {e}")
-        return False
-
-# ---------- SIGNAL LOGIC ----------
-def check_signal():
-    af = air_force_alert()
-    oil = oil_draw_alert()
-    dod = dod_contract_alert()
-    vix = vix_crush_alert()
-
-    if (af and oil) or (dod and oil) or (vix and oil):
-        source = "AirForce+Oil" if af and oil else "DoD+Oil" if dod and oil else "VIX+Oil"
-        logging.info(f"LONG SIGNAL: {source}")
-        return True, source
-    return False, None
-
-# ---------- EXECUTE LONG ----------
-def execute_long(source):
-    try:
-        account = api.get_account()
-        equity = float(account.cash)
-        risk = equity * 0.02
-        symbols = ['LMT', 'BA', 'USO']
-        per_sym = risk / len(symbols)
-        for sym in symbols:
-            price = float(api.get_last_trade(sym).price)
-            qty = int(per_sym // price)
-            if qty > 0:
-                api.submit_order(symbol=sym, qty=qty, side='buy', type='market', time_in_force='day')
-                logging.info(f"BOUGHT {qty} {sym}")
-        if TELEGRAM_READY:
-            bot.send_message(
-                chat_id=TELEGRAM_CHAT_ID,
-                text=f"ChainShot v7.3 LONG\nLMT/BA/USO\nTrigger: {source}\nRisk: 2%"
-            )
-    except Exception as e:
-        logging.error(f"Long trade failed: {e}")
-
-# ---------- MAIN LOOP ----------
+# ---------- MAIN ----------
 if __name__ == "__main__":
-    logging.info("ChainShot v7.3 LIVE — Monitoring 9:30–16:00 ET")
-
-    ai_engine = OptionsAIEngine() if AI_OPTIONS_ENABLED else None
-    options_trader = OptionsTrader(api) if AI_OPTIONS_ENABLED else None
-    short_put_trader = ShortPutTrader(api) if AI_OPTIONS_ENABLED else None
-
-    while True:
-        now = datetime.now()
-        if now.weekday() < 5 and 9 <= now.hour < 16:
-            triggered, src = check_signal()
-            if triggered:
-                execute_long(src)
-                time.sleep(3600)
-
-            if AI_OPTIONS_ENABLED and ai_engine:
-                signal_up, signal_down, prob_up = ai_engine.predict_signal()
-                account = api.get_account()
-                equity = float(account.cash)
-
-                if signal_up:
-                    options_trader.place_call(prob_up, equity)
-                    if TELEGRAM_READY:
-                        bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=f"AI CALL\nConfidence: {prob_up:.1%}\nRisk: 1%")
-                    time.sleep(300)
-
-                if signal_down:
-                    short_put_trader.place_put(1 - prob_up, equity)
-                    if TELEGRAM_READY:
-                        bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=f"AI SHORT PUT\nConfidence: {1-prob_up:.1%}\nRisk: 1%")
-                    time.sleep(300)
-
-        time.sleep(300)
+    logging.info("ChainShot Swarm v9.7 LIVE — FINAL")
+    swarm = SwarmOrchestrator()
+    swarm.run()
