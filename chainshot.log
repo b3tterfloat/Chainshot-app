@@ -1,0 +1,358 @@
+2025-11-13 06:26:50,611 | INFO | ChainShot v7.3 LIVE — Monitoring 9:30–16:00 ET
+2025-11-13 09:01:55,026 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 09:01:56,695 | ERROR | Short put failed: 'REST' object has no attribute 'get_last_trade'
+/Users/brockhenley/chainshot/trader.py:367: RuntimeWarning: coroutine 'Bot.send_message' was never awaited
+  bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=f"AI SHORT PUT\nConfidence: {1-prob_up:.1%}\nRisk: 1%")
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2025-11-13 09:11:58,865 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 09:12:00,013 | ERROR | Short put failed: 'REST' object has no attribute 'get_last_trade'
+/Users/brockhenley/chainshot/trader.py:367: RuntimeWarning: coroutine 'Bot.send_message' was never awaited
+  bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=f"AI SHORT PUT\nConfidence: {1-prob_up:.1%}\nRisk: 1%")
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2025-11-13 09:22:02,119 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 09:22:03,504 | ERROR | Short put failed: 'REST' object has no attribute 'get_last_trade'
+/Users/brockhenley/chainshot/trader.py:367: RuntimeWarning: coroutine 'Bot.send_message' was never awaited
+  bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=f"AI SHORT PUT\nConfidence: {1-prob_up:.1%}\nRisk: 1%")
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2025-11-13 09:32:05,864 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 09:37:08,898 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 09:42:12,730 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 09:42:13,793 | ERROR | Short put failed: 'REST' object has no attribute 'get_last_trade'
+/Users/brockhenley/chainshot/trader.py:367: RuntimeWarning: coroutine 'Bot.send_message' was never awaited
+  bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=f"AI SHORT PUT\nConfidence: {1-prob_up:.1%}\nRisk: 1%")
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2025-11-13 09:52:15,603 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 09:57:18,637 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 10:02:24,206 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 10:07:27,335 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 10:12:31,232 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 10:17:34,604 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+2025-11-13 10:17:44,654 | ERROR | Polygon error: HTTPSConnectionPool(host='api.polygon.io', port=443): Max retries exceeded with url: /v2/aggs/ticker/X:VIX/range/1/day/2025-11-12/2025-11-13?adjusted=true&apiKey=2CBAKuBIpN6_Fk4kQBm1hPB1HIvHrrlg (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x12a27e620>, 'Connection to api.polygon.io timed out. (connect timeout=10)'))
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 10:22:47,053 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 10:22:48,154 | ERROR | Short put failed: 'REST' object has no attribute 'get_last_trade'
+/Users/brockhenley/chainshot/trader.py:367: RuntimeWarning: coroutine 'Bot.send_message' was never awaited
+  bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=f"AI SHORT PUT\nConfidence: {1-prob_up:.1%}\nRisk: 1%")
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2025-11-13 10:32:50,190 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 10:37:53,646 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 10:42:57,212 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 10:48:00,083 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 10:48:01,030 | ERROR | Short put failed: 'REST' object has no attribute 'get_last_trade'
+/Users/brockhenley/chainshot/trader.py:367: RuntimeWarning: coroutine 'Bot.send_message' was never awaited
+  bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=f"AI SHORT PUT\nConfidence: {1-prob_up:.1%}\nRisk: 1%")
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2025-11-13 10:58:03,166 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 11:03:08,097 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 11:03:08,997 | ERROR | Short put failed: 'REST' object has no attribute 'get_last_trade'
+/Users/brockhenley/chainshot/trader.py:367: RuntimeWarning: coroutine 'Bot.send_message' was never awaited
+  bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=f"AI SHORT PUT\nConfidence: {1-prob_up:.1%}\nRisk: 1%")
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2025-11-13 11:13:12,426 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 11:18:16,262 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 11:23:20,185 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 11:28:23,265 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 11:33:26,622 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 11:38:29,758 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 11:43:32,679 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 11:48:35,679 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 11:53:39,396 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 11:58:42,912 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 12:03:48,453 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 12:08:53,673 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 12:13:57,919 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 12:13:59,222 | ERROR | Short put failed: 'REST' object has no attribute 'get_last_trade'
+/Users/brockhenley/chainshot/trader.py:367: RuntimeWarning: coroutine 'Bot.send_message' was never awaited
+  bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=f"AI SHORT PUT\nConfidence: {1-prob_up:.1%}\nRisk: 1%")
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2025-11-13 12:24:01,698 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 12:29:05,089 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 12:34:10,614 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 12:39:14,899 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 12:44:17,826 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 12:49:22,237 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 12:54:25,532 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 12:59:28,706 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 13:04:33,751 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 13:09:37,389 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+2025-11-13 13:09:47,723 | ERROR | Polygon error: HTTPSConnectionPool(host='api.polygon.io', port=443): Max retries exceeded with url: /v2/aggs/ticker/X:VIX/range/1/day/2025-11-12/2025-11-13?adjusted=true&apiKey=2CBAKuBIpN6_Fk4kQBm1hPB1HIvHrrlg (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x12a223f10>, 'Connection to api.polygon.io timed out. (connect timeout=10)'))
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 13:14:50,458 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 13:19:53,562 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 13:24:57,192 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 13:24:58,355 | ERROR | Short put failed: 'REST' object has no attribute 'get_last_trade'
+/Users/brockhenley/chainshot/trader.py:367: RuntimeWarning: coroutine 'Bot.send_message' was never awaited
+  bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=f"AI SHORT PUT\nConfidence: {1-prob_up:.1%}\nRisk: 1%")
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2025-11-13 13:35:00,498 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 13:40:03,531 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 13:45:06,831 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 13:50:09,810 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 13:55:13,072 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 14:00:20,288 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 14:05:25,297 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 14:10:29,293 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 14:15:34,490 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 14:20:39,227 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 14:25:42,511 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 14:30:47,514 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 14:35:51,263 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 14:40:54,829 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 14:40:55,794 | ERROR | Short put failed: 'REST' object has no attribute 'get_last_trade'
+/Users/brockhenley/chainshot/trader.py:367: RuntimeWarning: coroutine 'Bot.send_message' was never awaited
+  bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=f"AI SHORT PUT\nConfidence: {1-prob_up:.1%}\nRisk: 1%")
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2025-11-13 14:50:57,876 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 14:56:01,370 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 15:01:12,704 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 15:06:16,731 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 15:11:20,212 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 15:16:24,229 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 15:21:28,224 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+2025-11-13 15:21:38,259 | ERROR | Polygon error: HTTPSConnectionPool(host='api.polygon.io', port=443): Max retries exceeded with url: /v2/aggs/ticker/X:VIX/range/1/day/2025-11-12/2025-11-13?adjusted=true&apiKey=2CBAKuBIpN6_Fk4kQBm1hPB1HIvHrrlg (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x12a1efdc0>, 'Connection to api.polygon.io timed out. (connect timeout=10)'))
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 15:26:41,006 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 15:26:42,242 | ERROR | Short put failed: 'REST' object has no attribute 'get_last_trade'
+/Users/brockhenley/chainshot/trader.py:367: RuntimeWarning: coroutine 'Bot.send_message' was never awaited
+  bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=f"AI SHORT PUT\nConfidence: {1-prob_up:.1%}\nRisk: 1%")
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2025-11-13 15:36:44,410 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 15:41:47,585 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 15:46:50,854 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 15:51:54,407 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-13 15:56:58,094 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 09:02:04,370 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 09:07:07,829 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 09:12:12,016 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 09:17:16,152 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 09:22:19,639 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 09:27:23,124 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 09:32:26,499 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 09:37:30,830 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 09:42:33,985 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 09:47:37,720 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 09:52:41,751 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 09:57:45,576 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 10:02:49,425 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 10:07:54,923 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 10:12:58,680 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 10:18:01,952 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 10:23:04,975 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 10:28:08,625 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 10:33:12,474 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 10:38:15,872 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 10:43:19,972 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 10:48:23,887 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 10:53:26,745 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 10:58:29,370 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 11:03:41,345 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 11:08:44,633 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 11:13:48,290 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 11:18:51,643 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 11:23:54,612 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 11:28:58,225 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 11:34:01,592 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 11:39:04,656 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 11:44:07,613 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 11:49:10,984 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 11:54:13,877 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 11:59:17,040 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 12:04:22,352 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 12:09:25,304 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 12:14:28,422 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 12:19:32,266 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 12:24:35,791 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 12:29:39,645 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 12:34:42,982 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 12:39:45,946 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 12:44:49,132 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 12:49:52,657 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 12:54:55,740 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 12:59:58,497 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 13:05:02,990 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 13:10:07,259 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 13:15:11,040 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 13:20:14,593 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 13:25:18,208 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 13:30:21,756 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 13:35:25,198 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 13:40:28,714 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 13:45:31,970 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 13:50:35,664 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 13:55:38,730 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 14:00:49,010 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 14:05:54,921 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 14:10:58,797 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 14:16:04,223 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 14:21:10,384 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 14:26:15,615 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 14:31:20,530 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 14:36:23,731 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 14:41:27,871 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 14:46:31,163 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 14:51:34,521 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 14:56:38,267 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 15:01:46,565 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 15:06:50,004 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 15:11:53,276 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 15:16:57,047 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 15:22:00,736 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 15:27:04,532 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 15:32:07,816 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 15:37:10,514 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 15:42:14,016 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 15:47:17,021 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 15:52:20,407 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
+2025-11-14 15:57:23,104 | ERROR | DoD RSS error: mismatched tag: line 9, column 2
+[*********************100%***********************]  1 of 1 completed
